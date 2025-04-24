@@ -12,15 +12,9 @@ import ResetPasswordPage from './pages/ResetpasswordPage';
 function App() {
   return (
     <div className="App">
-       {/* <div className="text-center my-4">
-        <img src={logo} alt="N1 Solutions Logo" style={{ width: '250px' }} />
-      </div>
-      <h2 className="text-center">Welcome to N1 Talent Tech Dashboard</h2>
-      <LoginPage /> */}
-      <Navbar/>
+      <Navbar />
       <Router>
         <Routes>
-          {/* <Route path="/" element={<LoginPage />} /> */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
