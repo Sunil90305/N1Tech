@@ -8,6 +8,8 @@ import '..//node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import logo from './assets/logo.png';
 import Navbar from './layout/Navbar.js';
 import ResetPasswordPage from './pages/ResetpasswordPage';
+import ProfileForm from './pages/ProfileForm';
+
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/updateprofile" element={<ProfileForm />} />
+
         </Routes>
       </Router>
     </div>
