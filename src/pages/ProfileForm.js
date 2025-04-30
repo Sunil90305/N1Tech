@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import './ProfileForm.css';
 import axios from 'axios';
@@ -7,51 +5,52 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = ({ data }) => {
-  const [isEditMode, setIsEditMode] = useState(true); // set true to enter edit mode by default
+  const [isEditMode, setIsEditMode] = useState(true);
 
   const [formData, setFormData] = useState({
-    ...data,
+    name: data?.name || '',
+    email: data?.email || '',
+    phone: data?.phone || '',
     skills: '',
     experience: '',
-    resume: null
+    resumeUrl: '' // Updated to match the backend's `resumeUrl` field
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData(prev => ({ ...prev, resume: file }));
+    if (file) {
+      setFormData((prev) => ({ ...prev, resumeUrl: file.name })); // Save the file name
+    }
   };
 
   const handleSave = async () => {
-    console.log("Save button clicked");
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("phone", formData.phone);
-    formDataToSend.append("skills", formData.skills);
-    formDataToSend.append("experience", formData.experience);
+    console.log('Save button clicked');
 
-    if (formData.resume) {
-      formDataToSend.append("resume", formData.resume);
+    // Optional: Basic validation
+    if (!formData.name || !formData.email || !formData.phone) {
+      toast.error('Name, Email, and Phone are required.');
+      return;
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/api/profile/save", formDataToSend, {
+      // Send JSON data to the backend
+      const response = await axios.post('http://localhost:8080/api/profile/save', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
-      console.log("Response from backend:", response.data);
-      toast.success("Profile saved successfully!");
+      console.log('Response from backend:', response.data);
+      toast.success('Profile saved successfully!');
       setIsEditMode(false);
     } catch (error) {
-      console.error("Error saving profile:", error);
-      toast.error("Error saving profile.");
+      console.error('Error saving profile:', error.response?.data || error.message);
+      toast.error('Error saving profile.');
     }
   };
 
@@ -83,26 +82,27 @@ const Profile = ({ data }) => {
           </>
         ) : (
           <>
-            <p><strong>Name:</strong> {formData.name}</p>
-            <p><strong>Email:</strong> {formData.email}</p>
-            <p><strong>Phone:</strong> {formData.phone}</p>
-            <p><strong>Skills:</strong> {formData.skills}</p>
-            <p><strong>Experience:</strong> {formData.experience}</p>
-            <p><strong>Resume:</strong>
-              {formData.resume ? (
-                <a
-                  href={URL.createObjectURL(formData.resume)}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open(URL.createObjectURL(formData.resume), '_blank');
-                  }}
-                >
-                  View Resume
-                </a>
+            <p>
+              <strong>Name:</strong> {formData.name}
+            </p>
+            <p>
+              <strong>Email:</strong> {formData.email}
+            </p>
+            <p>
+              <strong>Phone:</strong> {formData.phone}
+            </p>
+            <p>
+              <strong>Skills:</strong> {formData.skills}
+            </p>
+            <p>
+              <strong>Experience:</strong> {formData.experience}
+            </p>
+            <p>
+              <strong>Resume:</strong>{' '}
+              {formData.resumeUrl ? (
+                <span>{formData.resumeUrl}</span>
               ) : (
-                ' Not uploaded'
+                'Not uploaded'
               )}
             </p>
             <button onClick={() => setIsEditMode(true)}>Edit</button>
