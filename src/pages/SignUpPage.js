@@ -11,7 +11,7 @@ export default function SignUpPage() {
     name: "",
     email: "",
     password: ""
-  }); 
+  });
   const [confirmPassword, setConfirmPassword] = React.useState(""); // State for confirm password
   const { name, email, password } = user;
   const onInputChange = (e) => {
@@ -24,7 +24,7 @@ export default function SignUpPage() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate password and confirm password
     if (password !== confirmPassword) {
       alert("Passwords do not match. Please try again.");
@@ -33,7 +33,7 @@ export default function SignUpPage() {
 
     try {
       const response = await axios.post("http://localhost:8080/addUser", user);
-  
+
       if (response.data.success) {
         alert(response.data.message); // Show success message
         navigate("/login"); // Redirect to the login page
@@ -69,14 +69,14 @@ export default function SignUpPage() {
         <h4 className="text-center mb-4">Create Your Account</h4>
         <form onSubmit={(e) => onSubmit(e)}>
           <div className="mb-3">
-            <label htmlFor="role" className="form-label"style={{ fontWeight: 'bold' }}>Role</label>
+            <label htmlFor="role" className="form-label" style={{ fontWeight: 'bold' }}>Role</label>
             <select className="form-select" id="role" name="role" required>
               <option value="Master">Master</option>
               <option value="Consultant">Consultant</option>
             </select>
           </div>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label"style={{ fontWeight: 'bold' }}>Name</label>
+            <label htmlFor="name" className="form-label" style={{ fontWeight: 'bold' }}>Name</label>
             <input
               type="name"
               className="form-control"
@@ -89,7 +89,7 @@ export default function SignUpPage() {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label"style={{ fontWeight: 'bold' }}>Email</label>
+            <label htmlFor="email" className="form-label" style={{ fontWeight: 'bold' }}>Email</label>
             <input
               type="email"
               className="form-control"
@@ -102,7 +102,7 @@ export default function SignUpPage() {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label"style={{ fontWeight: 'bold' }}>Password</label>
+            <label htmlFor="password" className="form-label" style={{ fontWeight: 'bold' }}>Password</label>
             <input
               type="password"
               className="form-control"
@@ -115,7 +115,7 @@ export default function SignUpPage() {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label"style={{ fontWeight: 'bold' }}>Confirm Password</label>
+            <label htmlFor="confirmPassword" className="form-label" style={{ fontWeight: 'bold' }}>Confirm Password</label>
             <input
               type="password"
               className="form-control"

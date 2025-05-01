@@ -13,7 +13,7 @@ export default function ResetPasswordPage() {
             const response = await axios.post("http://localhost:8080/resetPassword", { email, newPassword });
             if (response.data.success) {
                 alert(response.data.message); // Show success message
-                navigate ("/login"); // Redirect to the login page
+                navigate("/login"); // Redirect to the login page
             } else {
                 alert(response.data.message); // Show error message
             }

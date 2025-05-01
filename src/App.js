@@ -2,35 +2,32 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
+import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
-import '..//node_modules/bootstrap/dist/css/bootstrap.min.css';
-import '..//node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
-import logo from './assets/logo.png';
-import Navbar from './layout/Navbar.js';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
+import Navbar from './layout/Navbar';
 import ResetPasswordPage from './pages/ResetpasswordPage';
 import ProfileForm from './pages/ProfileForm';
 
 
 function App() {
   return (
-    <div className="App">
-       {/* <div className="text-center my-4">
-        <img src={logo} alt="N1 Solutions Logo" style={{ width: '250px' }} />
-      </div>
-      <h2 className="text-center">Welcome to N1 Talent Tech Dashboard</h2>
-      <LoginPage /> */}
-      <Navbar/>
-      <Router>
+    <Router>
+      <div className="App">
+        <Navbar />
         <Routes>
-          {/* <Route path="/" element={<LoginPage />} /> */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/updateprofile" element={<ProfileForm />} />
 
         </Routes>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 

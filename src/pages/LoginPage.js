@@ -19,23 +19,23 @@ export default function LoginPage() {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:8080/loginUser", user);
-      
+
             // Handle the structured JSON response from the backend
             if (response.data.success) {
               alert(response.data.message); // Show success message
-              navigate("/"); // Redirect to the home page
+              navigate("/dashboard"); // Redirect to the dashboard page
             } else {
-              alert(response.data.message); // Show error message from the backend
+                alert(response.data.message); // Show error message from the backend
             }
-          } catch (error) {
+        } catch (error) {
             if (error.response && error.response.status === 401) {
-              // Handle "Unauthorized" error
-              alert("Invalid credentials. Please try again.");
+                // Handle "Unauthorized" error
+                alert("Invalid credentials. Please try again.");
             } else {
-              console.error("Error during login:", error);
-              alert("An error occurred while logging in. Please try again later.");
+                console.error("Error during login:", error);
+                alert("An error occurred while logging in. Please try again later.");
             }
-          }
+        }
     };
 
 
