@@ -22,8 +22,8 @@ export default function LoginPage() {
 
             // Handle the structured JSON response from the backend
             if (response.data.success) {
-                alert(response.data.message); // Show success message
-                navigate("/"); // Redirect to the home page
+              alert(response.data.message); // Show success message
+              navigate("/dashboard"); // Redirect to the dashboard page
             } else {
                 alert(response.data.message); // Show error message from the backend
             }
