@@ -9,6 +9,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import Navbar from './layout/Navbar';
 import ResetPasswordPage from './pages/ResetpasswordPage';
+import ProfileForm from './pages/ProfileForm';
+
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/updateprofile" element={<ProfileForm />} />
+
         </Routes>
       </div>
     </Router>
