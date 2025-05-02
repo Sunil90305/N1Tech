@@ -77,4 +77,21 @@ public class UserService {
         response.put("message", "Password has been successfully updated.");
         return response;
     }
+
+
+    // Get User by Email
+    public Map<String, Object> getUserByEmail(String email) {
+        Map<String, Object> response = new HashMap<>();
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            response.put("success", false);
+            response.put("message", "User not found");
+            return response;
+        }
+
+        response.put("success", true);
+        response.put("user", user);
+        return response;
+    }
 }

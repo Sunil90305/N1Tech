@@ -10,11 +10,14 @@ public class User {
     @Id
     private String email;
     private String password;
+    private long phonenumber;
 
-    public User(String name, String email, String password) {
+
+    public User(String name, String email, String password, long phonenumber) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.phonenumber = phonenumber;
     }
 
     public User() {
@@ -43,5 +46,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(long phonenumber) {
+        this.phonenumber = phonenumber;
     }
 }
