@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../layout/Navbar';
 
 export default function DashboardPage() {
   const [userData, setUserData] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const navigate = useNavigate();
+  
+  const navigate = useNavigate();  
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -40,14 +42,17 @@ export default function DashboardPage() {
   }, [navigate]);
 
   // Handle logout
+ 
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Remove the token
     navigate('/login'); // Redirect to login page
   };
 
   return (
+    
     <div>
       {/* Main Content */}
+      <Navbar /> 
       <div className="d-flex" style={{ height: 'calc(100vh - 100px)' }}>
         {/* Sidebar */}
         <div

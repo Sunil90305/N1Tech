@@ -11,7 +11,12 @@ export default function ProfilePage() {
   });
   const [isEditing, setIsEditing] = useState(false); // Toggle for edit mode
   const navigate = useNavigate();
+const goToDashboard = () => {
+    navigate("/dashboard"); // ✅ Navigates to dashboard
+};
 
+// ✅ Add a button to trigger navigation
+<button onClick={goToDashboard}>Back to Dashboard</button>
   // Load user data
   const loadUser = async () => {
     try {
