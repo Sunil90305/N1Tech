@@ -7,20 +7,26 @@ import jakarta.persistence.*;
 public class User {
 
     private String name;
+
     @Id
     private String email;
+
     private String password;
 
-    public User(String name, String email, String password) {
+    private String role; // Newly added field for role-based access control
+
+    // Constructor including role
+    public User(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public User() {
-
     }
 
+    // Existing getters and setters
     public String getName() {
         return name;
     }
@@ -43,5 +49,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // New getter and setter for role
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
