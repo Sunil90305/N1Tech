@@ -1,8 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import logo from '../assets/logo.png';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function DashboardPage() {
+  const [userData, setUserData] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Retrieve the token from localStorage
+        console.log("Token from localStorage:", token); // Debugging log
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        const response = await axios.get('http://localhost:8080/api/user/me', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+        console.log("Response from /api/user/me:", response); // Debugging log
+        console.log("Response from /api/user/me:", response.data); // Debugging log
+        // setUserData(response.data); // Save user data in state
+        if (response.data) {
+          setUserData(response.data);
+        } else {
+          throw new Error("Invalid response");
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        alert('Session expired. Please log in again.');
+        navigate('/login'); // Redirect to login if token is invalid
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Remove the token
+    navigate('/login'); // Redirect to login page
+  };
+
   return (
     <div>
       {/* Main Content */}
@@ -17,18 +59,20 @@ export default function DashboardPage() {
           }}
         >
           <h5>Candidate Access</h5>
-          <p>Welcome, Yeswanth</p>
+          {userData && <p>Welcome, {userData.name}</p>}
           <hr />
           <h6>Profile Info</h6>
-          <p>
-            <strong>Name:</strong> Yeswanth
-            <br />
-            <strong>Email:</strong> yeswanth@example.com
-            <br />
-            <strong>Role:</strong> Admin / Master
-            <br />
-            <strong>Phone:</strong> +1-234-567-8901
-          </p>
+          {userData && (
+            <p>
+              <strong>Name:</strong> {userData.name}
+              <br />
+              <strong>Email:</strong> {userData.email}
+              <br />
+              <strong>Role:</strong> Admin / Master {/* Replace with dynamic role if available */}
+              <br />
+              <strong>Phone:</strong> +1-234-567-8901 {/* Replace with dynamic phone number if available */}
+            </p>
+          )}
         </div>
 
         {/* Dashboard */}
