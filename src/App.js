@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
+import ActiveBenchJobsPage from './pages/ActiveBenchJobsPage.js';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -24,7 +25,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/updateprofile" element={<ProfileForm />} />
-
+          <Route path="/active-bench-jobs" element={<ActiveBenchJobsPage />} /> {/* Add this route */}
         </Routes>
       </div>
     </Router>

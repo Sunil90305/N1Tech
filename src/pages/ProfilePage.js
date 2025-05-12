@@ -14,14 +14,21 @@ export default function ProfilePage() {
     
     const loadUser = async () => {
         try{
-        const hardcodedEmail = "pranati@gmail.com";
+        const hardcodedEmail = "kush@gmail.com";
         const result = await axios.get(`http://localhost:8080/User/${hardcodedEmail}`);
-        setUser(result.data);
+        console.log("API Response:", result.data);
+          // Extract the user object from the response
+          if (result.data.success) {
+            setUser(result.data.user);
+        } else {
+            alert("Failed to fetch user details.");
+        }
     }
     catch (error) {
         console.error("Axios Error:", error.response ? error.response.data : error.message);
         alert("Error fetching user! Check console for details.");
     }
+    
 };
     useEffect(() => {
         loadUser(); 

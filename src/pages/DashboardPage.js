@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.png';
+//import logo from '../assets/logo.png';
 
 export default function DashboardPage() {
   return (
@@ -73,17 +73,20 @@ export default function DashboardPage() {
             >
               <strong>Vendor Database</strong>
             </div>
-            <div
+            <Link
+              to="/active-bench-jobs"
               className="p-4 text-center"
               style={{
                 width: '200px',
                 background: '#fff3cd',
                 borderRadius: '10px',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                textDecoration: 'none',
+                color: 'inherit',
               }}
             >
-              <strong>Active Bench Database</strong>
-            </div>
+              <strong>Active Openings</strong>
+            </Link>
             <div
               className="p-4 text-center"
               style={{
