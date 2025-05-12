@@ -3,23 +3,20 @@ package com.n1talenttech.restapi.fullstackbackend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate primary key
-    private Long id;
-    private String name;
 
+    private String name;
+    @Id
     private String email;
     private String password;
-    private long phonenumber;
+    private String phoneNumber;
 
-
-    public User(String name, String email, String password, long phonenumber) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public User() {
@@ -50,11 +47,11 @@ public class User {
         this.password = password;
     }
 
-    public long getPhonenumber() {
-        return phonenumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(long phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

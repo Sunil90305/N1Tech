@@ -3,6 +3,7 @@ package com.n1talenttech.restapi.fullstackbackend.service;
 import com.n1talenttech.restapi.fullstackbackend.model.User;
 import com.n1talenttech.restapi.fullstackbackend.repository.UserRepository;
 import com.n1talenttech.restapi.fullstackbackend.request.LoginRequest;
+import com.n1talenttech.restapi.fullstackbackend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Sign-Up Logic
     public Map<String, Object> addUser(User user) {
@@ -52,8 +56,12 @@ public class UserService {
             return response;
         }
 
+        // Generate JWT Token
+        String token = jwtUtil.generateToken(user1.getEmail());
+
         response.put("success", true);
         response.put("message", "Login successful");
+        response.put("token", token); // Return the token
         return response;
     }
 
@@ -78,20 +86,50 @@ public class UserService {
         return response;
     }
 
-
-    // Get User by Email
-    public Map<String, Object> getUserByEmail(String email) {
+    public Map<String, Object> getUserDetails(String email) {
         Map<String, Object> response = new HashMap<>();
         Optional<User> user = userRepository.findByEmail(email);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             response.put("success", false);
             response.put("message", "User not found");
             return response;
         }
 
+        User user1 = user.get();
         response.put("success", true);
-        response.put("user", user);
+        response.put("name", user1.getName());
+        response.put("email", user1.getEmail());
+        response.put("phoneNumber", user1.getPhoneNumber()); // Include phoneNumber if needed
         return response;
+    }
+
+    public User updateUser(User user, String token) throws Exception {
+        // Remove "Bearer " prefix if present
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        System.out.println("Token after stripping Bearer: " + token); // Debugging log
+
+        // Validate the token
+        if (!jwtUtil.validateToken(token)) {
+            throw new Exception("Invalid or expired token");
+        }
+
+        // Extract email from the token
+        String email = jwtUtil.extractEmail(token);
+        System.out.println("Email extracted from token: " + email); // Debugging log
+
+        // Find the user by email
+        User existingUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        // Update user details
+        existingUser.setName(user.getName());
+        existingUser.setPhoneNumber(user.getPhoneNumber()); // Update phoneNumber
+
+        // Save the updated user
+        return userRepository.save(existingUser);
     }
 }
