@@ -3,11 +3,13 @@ package com.n1talenttech.restapi.fullstackbackend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
-
-    private String name;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate primary key
+    private Long id;
+    private String name;
+
     private String email;
     private String password;
     private long phonenumber;
