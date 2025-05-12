@@ -10,6 +10,9 @@ import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import Navbar from './layout/Navbar';
 import ResetPasswordPage from './pages/ResetpasswordPage';
 import ProfileForm from './pages/ProfileForm';
+import MasterDashboard from './pages/MasterDashboard';
+import ConsultantDashboard from './pages/ConsultantDashboard';
+
 
 
 function App() {
@@ -18,14 +21,18 @@ function App() {
       <div className="App">
         <Navbar />
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/updateprofile" element={<ProfileForm />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/signup" element={<SignUpPage />} />
+  <Route path="/reset-password" element={<ResetPasswordPage />} />
+  <Route path="/dashboard" element={<DashboardPage />} />
+  <Route path="/profile" element={<ProfilePage />} />
+  <Route path="/updateprofile" element={<ProfileForm />} />
+  <Route path="/master-dashboard" element={<MasterDashboard />} />
 
-        </Routes>
+<Route path="/consultant-dashboard" element={<ConsultantDashboard />} />
+
+</Routes>
+
       </div>
     </Router>
   );
