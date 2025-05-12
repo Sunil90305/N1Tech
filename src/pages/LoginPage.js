@@ -22,6 +22,7 @@ export default function LoginPage() {
 
             // Handle the structured JSON response from the backend
             if (response.data.success) {
+                localStorage.setItem('authToken', response.data.token); // Save the JWT token in localStorage
                 alert(response.data.message); // Show success message
                 navigate("/dashboard"); // Redirect to the dashboard page
             } else {
