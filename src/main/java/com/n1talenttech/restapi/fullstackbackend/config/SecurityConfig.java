@@ -18,12 +18,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+    public  SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/addUser", "/loginUser", "/resetPassword").permitAll() // Public endpoints
+                        .requestMatchers("/addUser", "/loginUser", "/resetPassword", "/api/active-bench").permitAll() // Public endpoints
                         .requestMatchers("/api/user/update", "/api/user/me").authenticated() // Protected endpoints
                         .anyRequest().authenticated() // Protect all other endpoints
                 )
