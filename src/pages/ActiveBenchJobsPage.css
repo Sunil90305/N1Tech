@@ -1,0 +1,104 @@
+/* Job Listings Container */
+.job-listings-container {
+  width: 70%;
+  margin: auto;
+  border: 2px solid #007bff;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 1px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-rows: auto auto; /* First row for header, second for job listings */
+}
+
+/* Table Header */
+.job-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; /* Title gets 2x space */
+  background-color: #0056b3;
+  color: white;
+  padding: 1px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 2px solid white;
+}
+
+/* Job Rows */
+.job-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; /* Title gets 2x space */
+  padding: 0px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.job-row:hover {
+  background-color: #f1f1f1; /* Light gray hover effect */
+}
+
+/* Columns */
+.column {
+  display: grid;
+  align-items: center;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Match Level Styling */
+.match-level {
+  font-weight: bold;
+  padding: 6px 12px; /* Increased padding for better proportion */
+  border-radius: 5px; /* Rounded corners like Apply button */
+  display: flex;
+  justify-content: center; /* Center text horizontally */
+  align-items: center; /* Center text vertically */
+  font-size: 12px; /* Match Apply button font size */
+  height: 35px; /* Same height as Apply button */
+  width: auto; /* Prevents unnecessary expansion */
+  min-width: 100px; /* Keeps uniform sizing */
+}
+
+/* Strong Match */
+.match-strong {
+  background-color: #28a745; /* Green */
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+
+/* Partial Match */
+.match-partial {
+  background-color: #ffcc00; /* Bright Yellow */
+  color: black;
+  border: none;
+  font-weight: bold;
+}
+
+/* No Match */
+.match-none {
+  background-color: #dc3545; /* Red */
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+
+/* Apply Button Styling */
+.apply-button {
+  padding: 1px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.apply-button:hover {
+  background-color: #0056b3;
+}
+

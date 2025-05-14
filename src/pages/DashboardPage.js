@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../layout/Navbar';
 
 export default function DashboardPage() {
   const [userData, setUserData] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const navigate = useNavigate();
+  
+  const navigate = useNavigate();  
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -40,14 +42,17 @@ export default function DashboardPage() {
   }, [navigate]);
 
   // Handle logout
+ 
   const handleLogout = () => {
     localStorage.removeItem('authToken'); // Remove the token
     navigate('/login'); // Redirect to login page
   };
 
   return (
+    
     <div>
       {/* Main Content */}
+      <Navbar /> 
       <div className="d-flex" style={{ height: 'calc(100vh - 100px)' }}>
         {/* Sidebar */}
         <div
@@ -70,7 +75,7 @@ export default function DashboardPage() {
               <br />
               <strong>Role:</strong> Admin / Master {/* Replace with dynamic role if available */}
               <br />
-              <strong>Phone:</strong> +1-234-567-8901 {/* Replace with dynamic phone number if available */}
+              <strong>Phone:</strong> {userData.phoneNumber} {/* Replace with dynamic phone number if available */}
             </p>
           )}
         </div>
@@ -117,17 +122,20 @@ export default function DashboardPage() {
             >
               <strong>Vendor Database</strong>
             </div>
-            <div
+            <Link
+              to="/active-bench-jobs"
               className="p-4 text-center"
               style={{
                 width: '200px',
                 background: '#fff3cd',
                 borderRadius: '10px',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                textDecoration: 'none',
+                color: 'inherit',
               }}
             >
-              <strong>Active Bench Database</strong>
-            </div>
+              <strong>Active Openings</strong>
+            </Link>
             <div
               className="p-4 text-center"
               style={{
