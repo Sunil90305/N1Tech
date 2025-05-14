@@ -75,7 +75,7 @@ export default function DashboardPage() {
               <br />
               <strong>Role:</strong> Admin / Master {/* Replace with dynamic role if available */}
               <br />
-              <strong>Phone:</strong> +1-234-567-8901 {/* Replace with dynamic phone number if available */}
+              <strong>Phone:</strong> {userData.phoneNumber} {/* Replace with dynamic phone number if available */}
             </p>
           )}
         </div>

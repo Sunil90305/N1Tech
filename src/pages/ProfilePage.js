@@ -7,7 +7,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState({
     name: "",
     email: "",
-    phoneNumber: ""
+     phoneNumber: ""
   });
   const [isEditing, setIsEditing] = useState(false); // Toggle for edit mode
   const navigate = useNavigate();
@@ -30,7 +30,11 @@ const goToDashboard = () => {
           Authorization: `Bearer ${token}` // Include token in Authorization header
         }
       });
-      setUser(response.data);
+      setUser({
+        name: response.data.name,
+        email: response.data.email,
+       phoneNumber: response.data.phoneNumber
+      });
     } catch (error) {
       console.error("Error fetching user data:", error.response ? error.response.data : error.message);
       alert("Error fetching user! Check console for details.");
@@ -51,6 +55,7 @@ const goToDashboard = () => {
       const payload = {
         name: user.name,
         email: user.email,
+        // phone_number: user.phone_number
         phoneNumber: user.phoneNumber // Correct casing for phoneNumber
       };
   
@@ -136,16 +141,16 @@ const goToDashboard = () => {
               </li>
               <li className="list-group-item d-flex align-items-center">
                 <FaPhone className="me-2 text-danger" />
-                <strong>Phone Number:&nbsp;</strong>
+                <strong>PhoneNumber:&nbsp;</strong>
                 {isEditing ? (
                   <input
                     type="text"
-                    value={user.phoneNumber}
-                    onChange={(e) => setUser({ ...user, phoneNumber: e.target.value })}
-                    className="form-control"
-                  />
-                ) : (
-                  user.phonenumber
+                    value={user.phoneNumber} // ✅ Corrected mapping
+        onChange={(e) => setUser({ ...user, phoneNumber: e.target.value })}
+        className="form-control"
+      />
+    ) : (
+      user.phoneNumber
                 )}
               </li>
             </ul>
