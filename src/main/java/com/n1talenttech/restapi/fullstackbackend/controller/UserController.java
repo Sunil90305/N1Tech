@@ -67,6 +67,7 @@ public class UserController {
         try {
             // Extract the JWT token from the Authorization header
             String authorizationHeader = request.getHeader("Authorization");
+            System.out.println("Authorization Header Received: " + authorizationHeader); // ✅ Debugging log
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authorization header is missing or invalid"));
             }
@@ -78,7 +79,7 @@ public class UserController {
 
             // Extract email from the token
             String email = jwtUtil.extractEmail(token);
-
+            System.out.println("Extracted Email from Token: " + email); // ✅ Debugging log
             // Fetch user details
             Map<String, Object> response = userService.getUserDetails(email);
             if (Boolean.FALSE.equals(response.get("success"))) {

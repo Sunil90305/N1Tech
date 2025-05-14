@@ -19,7 +19,7 @@ public class WebConfig {
         config.addAllowedOrigin("http://localhost:3000"); // Allow requests from the frontend
         config.addAllowedHeader("*"); // Allow all headers
         config.addAllowedMethod("*"); // Allow all HTTP methods
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**", config); //Applies this configuration to all endpoints (/**)
         return new CorsFilter(source);
     }
 }

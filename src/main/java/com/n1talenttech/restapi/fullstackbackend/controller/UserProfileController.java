@@ -9,7 +9,7 @@ import com.n1talenttech.restapi.fullstackbackend.repository.UserProfileRepositor
 
 import java.io.File;
 import java.io.IOException;
-
+//import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/api/profile")
 @CrossOrigin(origins = "http://localhost:3000") // Allow frontend access
@@ -55,5 +55,21 @@ public class UserProfileController {
     public UserProfile getProfileById(@PathVariable Long id) {
         return repository.findById(id).orElse(null);
     }
+
+//    /// / Extract the email from the token before fetching user data
+//    @GetMapping("/user/profile")
+//    public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
+//        try {
+//            String jwt = token.replace("Bearer ", "");
+//            String email = JwtUtil.verifyToken(jwt).getSubject(); // Extract email from token
+//            Optional<User> user = userRepository.findByEmail(email);
+//
+//            return user.map(ResponseEntity::ok)
+//                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+//        }
+//    }
+
 }
 
