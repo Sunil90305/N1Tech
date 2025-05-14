@@ -8,8 +8,10 @@ public class User {
 
     private String name;
     @Id
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
+    @Column(name = "phoneNumber", nullable = true)
     private String phoneNumber;
 
     public User(String name, String email, String password) {

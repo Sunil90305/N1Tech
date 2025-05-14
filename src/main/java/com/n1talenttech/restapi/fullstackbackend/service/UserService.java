@@ -97,10 +97,12 @@ public class UserService {
         }
 
         User user1 = user.get();
+        System.out.println("User fetched from DB: " + user1); // ✅ Debugging log
         response.put("success", true);
         response.put("name", user1.getName());
         response.put("email", user1.getEmail());
-        response.put("phoneNumber", user1.getPhoneNumber()); // Include phoneNumber if needed
+        response.put("phoneNumber", user.get().getPhoneNumber()); // Include phoneNumber if needed
+        System.out.println("Final API Response: " + response); // ✅ Debugging log
         return response;
     }
 
@@ -125,9 +127,19 @@ public class UserService {
         User existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User not found"));
 
+//        // Update user details
+//        existingUser.setName(user.getName());
+//        existingUser.setPhoneNumber(user.getPhoneNumber()); // Update phoneNumber
         // Update user details
-        existingUser.setName(user.getName());
-        existingUser.setPhoneNumber(user.getPhoneNumber()); // Update phoneNumber
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+        if (user.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail())) {
+            throw new Exception("Email cannot be updated"); // Optional: Prevent email updates
+        }
 
         // Save the updated user
         return userRepository.save(existingUser);

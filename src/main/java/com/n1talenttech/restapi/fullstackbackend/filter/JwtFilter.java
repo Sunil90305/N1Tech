@@ -12,16 +12,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
-
+    private static final List<String> PUBLIC_ENDPOINTS = List.of("/addUser", "/loginUser", "/resetPassword", "/api/active-bench");
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String servletPath = request.getServletPath();
+
+        // ✅ Skip JWT validation for public endpoints
+        if (PUBLIC_ENDPOINTS.contains(servletPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
