@@ -13,20 +13,25 @@ public class User {
 
     private String password;
 
-    private String role; // Newly added field for role-based access control
+    private String role; // Role-based access
 
-    // Constructor including role
-    public User(String name, String email, String password, String role) {
+    @Column(name = "phoneNumber")
+    private String phoneNumber; // ✅ New field for phone number
+
+    // Default constructor
+    public User() {
+    }
+
+    // Constructor with all fields
+    public User(String name, String email, String password, String role, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.phoneNumber = phoneNumber;
     }
 
-    public User() {
-    }
-
-    // Existing getters and setters
+    // Getters and setters
     public String getName() {
         return name;
     }
@@ -51,12 +56,19 @@ public class User {
         this.password = password;
     }
 
-    // New getter and setter for role
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -3,6 +3,7 @@ package com.n1talenttech.restapi.fullstackbackend.controller;
 import com.n1talenttech.restapi.fullstackbackend.model.User;
 import com.n1talenttech.restapi.fullstackbackend.request.LoginRequest;
 import com.n1talenttech.restapi.fullstackbackend.service.UserService;
+import com.n1talenttech.restapi.fullstackbackend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,13 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Sign-Up Endpoint
     @PostMapping("/addUser")
@@ -41,9 +45,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // Login Endpoint with session-based auth
+    // Login Endpoint
     @PostMapping("/loginUser")
-    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -54,11 +58,15 @@ public class UserController {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            request.getSession(true); // Force session creation
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(userDetails.getUsername());
 
             response.put("success", true);
             response.put("message", "Login successful");
-            response.put("role", authentication.getAuthorities().toString());
+            response.put("token", token);
+            response.put("role", userDetails.getAuthorities().toString());
+
             return ResponseEntity.ok(response);
 
         } catch (AuthenticationException ex) {
@@ -97,7 +105,27 @@ public class UserController {
         return ResponseEntity.ok("Welcome Consultant - secured dashboard");
     }
 
-    // Show current user (for debugging)
+    // 🔍 Return user info from token (used by Navbar)
+    @GetMapping("/api/user/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Missing or invalid token"));
+        }
+
+        token = token.substring(7); // remove "Bearer "
+
+        try {
+            String email = jwtUtil.extractEmail(token);
+            Map<String, Object> userDetails = userService.getUserDetails(email);
+            return ResponseEntity.ok(userDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid or expired token"));
+        }
+    }
+
+    // Debug endpoint (optional)
     @GetMapping("/user/role")
     public ResponseEntity<String> getUserRole(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
