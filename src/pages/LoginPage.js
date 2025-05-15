@@ -1,5 +1,5 @@
-import React from 'react'
-import logo from '../assets/logo.png'
+import React from 'react';
+import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -15,22 +15,37 @@ export default function LoginPage() {
     const onInputChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
+
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/loginUser", user);
+            const response = await axios.post("http://localhost:8080/loginUser", user, {
+                withCredentials: true
+            });
 
-            // Handle the structured JSON response from the backend
             if (response.data.success) {
+                alert(response.data.message);
+                const role = response.data.role;
+
+                console.log("Login response role:", role);
+                localStorage.setItem("userRole", role);
+
+                // ✅ Use includes to match [ROLE_Master] or [ROLE_Consultant]
+                if (role.includes("ROLE_Master")) {
+                    navigate("/master-dashboard");
+                } else if (role.includes("ROLE_Consultant")) {
+                    navigate("/consultant-dashboard");
+                } else {
+                    navigate("/dashboard"); // fallback
+                }
                 localStorage.setItem('authToken', response.data.token); // Save the JWT token in localStorage
                 alert(response.data.message); // Show success message
                 navigate("/dashboard"); // Redirect to the dashboard page
             } else {
-                alert(response.data.message); // Show error message from the backend
+                alert(response.data.message);
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                // Handle "Unauthorized" error
                 alert("Invalid credentials. Please try again.");
             } else {
                 console.error("Error during login:", error);
@@ -38,7 +53,6 @@ export default function LoginPage() {
             }
         }
     };
-
 
     return (
         <div
@@ -55,7 +69,7 @@ export default function LoginPage() {
                     <img src={logo} alt="N1 Solutions Logo" style={{ width: '150px' }} />
                 </div>
                 <h4 className="text-center mb-4">Login to Your Account</h4>
-                <form onSubmit={(e) => onSubmit(e)}>
+                <form onSubmit={onSubmit}>
                     <div className="mb-3">
                         <label htmlFor="role" className="form-label" style={{ fontWeight: 'bold' }}>Role</label>
                         <select className="form-select" id="role" name="role" required>
@@ -69,11 +83,11 @@ export default function LoginPage() {
                             type="email"
                             className="form-control"
                             id="email"
-                            name="userName" // Ensure the name matches the state key
+                            name="userName"
                             placeholder="Enter your email / username"
                             required
                             value={userName}
-                            onChange={(e) => onInputChange(e)} // This should update the state
+                            onChange={onInputChange}
                         />
                     </div>
                     <div className="mb-3">
@@ -86,7 +100,7 @@ export default function LoginPage() {
                             placeholder="Enter your password"
                             required
                             value={password}
-                            onChange={(e) => onInputChange(e)}
+                            onChange={onInputChange}
                         />
                     </div>
 
@@ -100,11 +114,7 @@ export default function LoginPage() {
                         Forgot Password?
                     </button>
                 </form>
-
-
             </div>
         </div>
     );
 }
-
-

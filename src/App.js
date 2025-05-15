@@ -11,6 +11,9 @@ import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import Navbar from './layout/Navbar';
 import ResetPasswordPage from './pages/ResetpasswordPage';
 import ProfileForm from './pages/ProfileForm';
+import MasterDashboard from './pages/MasterDashboard';
+import ConsultantDashboard from './pages/ConsultantDashboard';
+
 
 
 function App() {
@@ -26,6 +29,10 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/updateprofile" element={<ProfileForm />} />
           <Route path="/active-bench-jobs" element={<ActiveBenchJobsPage />} /> {/* Add this route */}
+          <Route path="/master-dashboard" element={<MasterDashboard />} />
+
+          <Route path="/consultant-dashboard" element={<ConsultantDashboard />} />
+
         </Routes>
       </div>
     </Router>

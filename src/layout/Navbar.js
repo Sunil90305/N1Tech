@@ -45,19 +45,24 @@ export default function Navbar() {
       <div
         className="d-flex align-items-center px-4 py-3"
         style={{
-          background: 'linear-gradient(to right,rgb(218, 204, 253), #2575fc)', // Gradient background
+          background: 'linear-gradient(to right,rgb(218, 204, 253), #2575fc)',
           color: 'white',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Add shadow for better appearance
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}
       >
+        {/* Logo */}
         <div className="d-flex align-items-center" style={{ flex: 1 }}>
           <img src={logo} alt="N1 Solutions Logo" style={{ width: '150px' }} />
         </div>
+
+        {/* Centered Title */}
         <div className="text-center" style={{ flex: 2 }}>
           <h4 className="m-0" style={{ fontWeight: 'bold' }}>
             Welcome to N1 Talent Tech Dashboard
           </h4>
         </div>
+
+        {/* Buttons */}
         <div style={{ flex: 1, textAlign: 'right' }}>
           {/* Show Profile dropdown only on the Dashboard page */}
           {location.pathname === '/dashboard' && userData && (
