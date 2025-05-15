@@ -38,6 +38,9 @@ export default function LoginPage() {
                 } else {
                     navigate("/dashboard"); // fallback
                 }
+                localStorage.setItem('authToken', response.data.token); // Save the JWT token in localStorage
+                alert(response.data.message); // Show success message
+                navigate("/dashboard"); // Redirect to the dashboard page
             } else {
                 alert(response.data.message);
             }

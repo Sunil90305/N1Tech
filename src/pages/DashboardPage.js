@@ -1,10 +1,58 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Navbar from '../layout/Navbar';
 
 export default function DashboardPage() {
+  const [userData, setUserData] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  const navigate = useNavigate();  
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Retrieve the token from localStorage
+        console.log("Token from localStorage:", token); // Debugging log
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        const response = await axios.get('http://localhost:8080/api/user/me', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+        console.log("Response from /api/user/me:", response); // Debugging log
+        console.log("Response from /api/user/me:", response.data); // Debugging log
+        // setUserData(response.data); // Save user data in state
+        if (response.data) {
+          setUserData(response.data);
+        } else {
+          throw new Error("Invalid response");
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        alert('Session expired. Please log in again.');
+        navigate('/login'); // Redirect to login if token is invalid
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  // Handle logout
+ 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Remove the token
+    navigate('/login'); // Redirect to login page
+  };
+
   return (
+    
     <div>
       {/* Main Content */}
+      <Navbar /> 
       <div className="d-flex" style={{ height: 'calc(100vh - 100px)' }}>
         {/* Sidebar */}
         <div
@@ -16,18 +64,20 @@ export default function DashboardPage() {
           }}
         >
           <h5>Candidate Access</h5>
-          <p>Welcome, Yeswanth</p>
+          {userData && <p>Welcome, {userData.name}</p>}
           <hr />
           <h6>Profile Info</h6>
-          <p>
-            <strong>Name:</strong> Yeswanth
-            <br />
-            <strong>Email:</strong> yeswanth@example.com
-            <br />
-            <strong>Role:</strong> Admin / Master
-            <br />
-            <strong>Phone:</strong> +1-234-567-8901
-          </p>
+          {userData && (
+            <p>
+              <strong>Name:</strong> {userData.name}
+              <br />
+              <strong>Email:</strong> {userData.email}
+              <br />
+              <strong>Role:</strong> Admin / Master {/* Replace with dynamic role if available */}
+              <br />
+              <strong>Phone:</strong> {userData.phoneNumber} {/* Replace with dynamic phone number if available */}
+            </p>
+          )}
         </div>
 
         {/* Dashboard */}
@@ -72,17 +122,20 @@ export default function DashboardPage() {
             >
               <strong>Vendor Database</strong>
             </div>
-            <div
+            <Link
+              to="/active-bench-jobs"
               className="p-4 text-center"
               style={{
                 width: '200px',
                 background: '#fff3cd',
                 borderRadius: '10px',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                textDecoration: 'none',
+                color: 'inherit',
               }}
             >
-              <strong>Active Bench Database</strong>
-            </div>
+              <strong>Active Openings</strong>
+            </Link>
             <div
               className="p-4 text-center"
               style={{

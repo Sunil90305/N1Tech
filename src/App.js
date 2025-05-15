@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
+import ActiveBenchJobsPage from './pages/ActiveBenchJobsPage.js';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -19,20 +20,20 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
-  <Route path="/login" element={<LoginPage />} />
-  <Route path="/signup" element={<SignUpPage />} />
-  <Route path="/reset-password" element={<ResetPasswordPage />} />
-  <Route path="/dashboard" element={<DashboardPage />} />
-  <Route path="/profile" element={<ProfilePage />} />
-  <Route path="/updateprofile" element={<ProfileForm />} />
-  <Route path="/master-dashboard" element={<MasterDashboard />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/updateprofile" element={<ProfileForm />} />
+          <Route path="/active-bench-jobs" element={<ActiveBenchJobsPage />} /> {/* Add this route */}
+          <Route path="/master-dashboard" element={<MasterDashboard />} />
 
-<Route path="/consultant-dashboard" element={<ConsultantDashboard />} />
+          <Route path="/consultant-dashboard" element={<ConsultantDashboard />} />
 
-</Routes>
-
+        </Routes>
       </div>
     </Router>
   );
