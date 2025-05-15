@@ -19,10 +19,10 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired(required = false)
+    private PasswordEncoder passwordEncoder;
 
     // Sign-Up Logic
     public Map<String, Object> addUser(User user) {
@@ -34,7 +34,10 @@ public class UserService {
             return response;
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // If passwordEncoder is available, encode the password
+        if (passwordEncoder != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
 
         response.put("success", true);
@@ -45,8 +48,8 @@ public class UserService {
     // Login Logic
     public Map<String, Object> loginUser(LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
-
         Optional<User> userOpt = userRepository.findByEmail(loginRequest.getUserName());
+
         if (userOpt.isEmpty()) {
             response.put("success", false);
             response.put("message", "User not found");
@@ -55,7 +58,15 @@ public class UserService {
 
         User user = userOpt.get();
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        // If passwordEncoder is available, use it to match passwords
+        boolean passwordMatches;
+        if (passwordEncoder != null) {
+            passwordMatches = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+        } else {
+            passwordMatches = user.getPassword().equals(loginRequest.getPassword());
+        }
+
+        if (!passwordMatches) {
             response.put("success", false);
             response.put("message", "Invalid password");
             return response;
@@ -84,7 +95,11 @@ public class UserService {
         }
 
         User existingUser = user.get();
-        existingUser.setPassword(passwordEncoder.encode(newPassword));
+        if (passwordEncoder != null) {
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        } else {
+            existingUser.setPassword(newPassword);
+        }
         userRepository.save(existingUser);
 
         response.put("success", true);
@@ -106,29 +121,41 @@ public class UserService {
         response.put("success", true);
         response.put("name", user1.getName());
         response.put("email", user1.getEmail());
-        response.put("phoneNumber", user1.getPhoneNumber()); // Ensure User.java has this method
+        response.put("phoneNumber", user1.getPhoneNumber());
         return response;
     }
 
     public User updateUser(User user, String token) throws Exception {
+        // Remove "Bearer " prefix if present
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
 
         System.out.println("Token after stripping Bearer: " + token);
 
+        // Validate the token
         if (!jwtUtil.validateToken(token)) {
             throw new Exception("Invalid or expired token");
         }
 
+        // Extract email from the token
         String email = jwtUtil.extractEmail(token);
         System.out.println("Email extracted from token: " + email);
 
+        // Find the user by email
         User existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User not found"));
 
-        existingUser.setName(user.getName());
-        existingUser.setPhoneNumber(user.getPhoneNumber()); // Ensure User.java has this method
+        // Update user details only if provided
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+        if (user.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail())) {
+            throw new Exception("Email cannot be updated");
+        }
 
         return userRepository.save(existingUser);
     }

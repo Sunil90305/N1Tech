@@ -9,14 +9,15 @@ public class User {
     private String name;
 
     @Id
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
 
     private String role; // Role-based access
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber; // ✅ New field for phone number
+    @Column(name = "phoneNumber", nullable = true)
+    private String phoneNumber;
 
     // Default constructor
     public User() {
@@ -29,6 +30,13 @@ public class User {
         this.password = password;
         this.role = role;
         this.phoneNumber = phoneNumber;
+    }
+
+    // Optionally, constructor without role and phoneNumber
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     // Getters and setters
