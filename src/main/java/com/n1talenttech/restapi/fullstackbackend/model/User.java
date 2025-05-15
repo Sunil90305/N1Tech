@@ -7,24 +7,39 @@ import jakarta.persistence.*;
 public class User {
 
     private String name;
+
     @Id
     @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
+
+    private String role; // Role-based access
+
     @Column(name = "phoneNumber", nullable = true)
     private String phoneNumber;
 
+    // Default constructor
+    public User() {
+    }
+
+    // Constructor with all fields
+    public User(String name, String email, String password, String role, String phoneNumber) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+    }
+
+    // Optionally, constructor without role and phoneNumber
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.phoneNumber = phoneNumber;
     }
 
-    public User() {
-
-    }
-
+    // Getters and setters
     public String getName() {
         return name;
     }
@@ -47,6 +62,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getPhoneNumber() {

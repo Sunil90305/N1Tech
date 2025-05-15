@@ -17,21 +17,21 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Sign-Up Endpoint
+    // Sign Up Endpoint
     @PostMapping("/addUser")
     public ResponseEntity<Map<String, Object>> addUser(@RequestBody User user) {
         Map<String, Object> response = userService.addUser(user);
 
         if (Boolean.FALSE.equals(response.get("success"))) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response); // 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
 
-        return ResponseEntity.ok(response); // 200 OK
+        return ResponseEntity.ok(response);
     }
 
     // Login Endpoint
@@ -40,14 +40,13 @@ public class UserController {
         Map<String, Object> response = userService.loginUser(loginRequest);
 
         if (Boolean.FALSE.equals(response.get("success"))) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response); // 401 Unauthorized
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
-        return ResponseEntity.ok(response); // 200 OK
+        return ResponseEntity.ok(response);
     }
 
-
-    //resetpassword endpoint
+    // Reset Password Endpoint
     @PostMapping("/resetPassword")
     public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -56,18 +55,19 @@ public class UserController {
         Map<String, Object> response = userService.resetPassword(email, newPassword);
 
         if (Boolean.FALSE.equals(response.get("success"))) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        return ResponseEntity.ok(response); // 200 OK
+        return ResponseEntity.ok(response);
     }
 
+    // Get current user details from JWT token
     @GetMapping("/api/user/me")
     public ResponseEntity<Map<String, Object>> getUserDetails(HttpServletRequest request) {
         try {
             // Extract the JWT token from the Authorization header
             String authorizationHeader = request.getHeader("Authorization");
-            System.out.println("Authorization Header Received: " + authorizationHeader); // ✅ Debugging log
+            System.out.println("Authorization Header Received: " + authorizationHeader); // Debugging log
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authorization header is missing or invalid"));
             }
@@ -79,20 +79,21 @@ public class UserController {
 
             // Extract email from the token
             String email = jwtUtil.extractEmail(token);
-            System.out.println("Extracted Email from Token: " + email); // ✅ Debugging log
+            System.out.println("Extracted Email from Token: " + email); // Debugging log
+
             // Fetch user details
             Map<String, Object> response = userService.getUserDetails(email);
             if (Boolean.FALSE.equals(response.get("success"))) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 404 Not Found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
-            return ResponseEntity.ok(response); // 200 OK
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "An error occurred"));
         }
     }
 
-
+    // Update user endpoint
     @PutMapping("/api/user/update")
     public ResponseEntity<?> updateUser(@RequestBody User user, @RequestHeader("Authorization") String token) {
         try {
@@ -108,5 +109,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", e.getMessage())); // Return error message
         }
     }
-
 }

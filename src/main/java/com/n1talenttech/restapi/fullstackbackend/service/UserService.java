@@ -5,6 +5,7 @@ import com.n1talenttech.restapi.fullstackbackend.repository.UserRepository;
 import com.n1talenttech.restapi.fullstackbackend.request.LoginRequest;
 import com.n1talenttech.restapi.fullstackbackend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,19 +21,25 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired(required = false)
+    private PasswordEncoder passwordEncoder;
+
     // Sign-Up Logic
     public Map<String, Object> addUser(User user) {
         Map<String, Object> response = new HashMap<>();
 
-        // Check if a user with the same email already exists
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             response.put("success", false);
             response.put("message", "User with this email already exists");
             return response;
         }
 
-        // Save the new user
+        // If passwordEncoder is available, encode the password
+        if (passwordEncoder != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
+
         response.put("success", true);
         response.put("message", "User created successfully");
         return response;
@@ -41,31 +48,42 @@ public class UserService {
     // Login Logic
     public Map<String, Object> loginUser(LoginRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
-        Optional<User> user = userRepository.findById(loginRequest.getUserName());
+        Optional<User> userOpt = userRepository.findByEmail(loginRequest.getUserName());
 
-        if (user.isEmpty()) {
+        if (userOpt.isEmpty()) {
             response.put("success", false);
             response.put("message", "User not found");
             return response;
         }
 
-        User user1 = user.get();
-        if (!user1.getPassword().equals(loginRequest.getPassword())) {
+        User user = userOpt.get();
+
+        // If passwordEncoder is available, use it to match passwords
+        boolean passwordMatches;
+        if (passwordEncoder != null) {
+            passwordMatches = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+        } else {
+            passwordMatches = user.getPassword().equals(loginRequest.getPassword());
+        }
+
+        if (!passwordMatches) {
             response.put("success", false);
             response.put("message", "Invalid password");
             return response;
         }
 
-        // Generate JWT Token
-        String token = jwtUtil.generateToken(user1.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        System.out.println("✅ LOGIN: " + user.getEmail() + " logged in with ROLE = " + user.getRole());
 
         response.put("success", true);
         response.put("message", "Login successful");
-        response.put("token", token); // Return the token
+        response.put("role", user.getRole());
+        response.put("token", token);
         return response;
     }
 
-    // Resetpassword logic
+    // Reset Password Logic
     public Map<String, Object> resetPassword(String email, String newPassword) {
         Map<String, Object> response = new HashMap<>();
 
@@ -76,10 +94,13 @@ public class UserService {
             return response;
         }
 
-        // Update the user's password
         User existingUser = user.get();
-        existingUser.setPassword(newPassword); // Update the password
-        userRepository.save(existingUser); // Save the updated user
+        if (passwordEncoder != null) {
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        } else {
+            existingUser.setPassword(newPassword);
+        }
+        userRepository.save(existingUser);
 
         response.put("success", true);
         response.put("message", "Password has been successfully updated.");
@@ -97,12 +118,10 @@ public class UserService {
         }
 
         User user1 = user.get();
-        System.out.println("User fetched from DB: " + user1); // ✅ Debugging log
         response.put("success", true);
         response.put("name", user1.getName());
         response.put("email", user1.getEmail());
-        response.put("phoneNumber", user.get().getPhoneNumber()); // Include phoneNumber if needed
-        System.out.println("Final API Response: " + response); // ✅ Debugging log
+        response.put("phoneNumber", user1.getPhoneNumber());
         return response;
     }
 
@@ -112,7 +131,7 @@ public class UserService {
             token = token.substring(7);
         }
 
-        System.out.println("Token after stripping Bearer: " + token); // Debugging log
+        System.out.println("Token after stripping Bearer: " + token);
 
         // Validate the token
         if (!jwtUtil.validateToken(token)) {
@@ -121,16 +140,13 @@ public class UserService {
 
         // Extract email from the token
         String email = jwtUtil.extractEmail(token);
-        System.out.println("Email extracted from token: " + email); // Debugging log
+        System.out.println("Email extracted from token: " + email);
 
         // Find the user by email
         User existingUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User not found"));
 
-//        // Update user details
-//        existingUser.setName(user.getName());
-//        existingUser.setPhoneNumber(user.getPhoneNumber()); // Update phoneNumber
-        // Update user details
+        // Update user details only if provided
         if (user.getName() != null) {
             existingUser.setName(user.getName());
         }
@@ -138,10 +154,9 @@ public class UserService {
             existingUser.setPhoneNumber(user.getPhoneNumber());
         }
         if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail())) {
-            throw new Exception("Email cannot be updated"); // Optional: Prevent email updates
+            throw new Exception("Email cannot be updated");
         }
 
-        // Save the updated user
         return userRepository.save(existingUser);
     }
 }

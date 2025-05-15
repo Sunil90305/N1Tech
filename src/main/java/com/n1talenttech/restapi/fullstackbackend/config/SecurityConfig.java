@@ -15,28 +15,25 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.http.HttpMethod;
 
-
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public  SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Allow CORS Preflight Requests
-
-                        .requestMatchers("/addUser", "/loginUser", "/resetPassword", "/api/active-bench").permitAll() // ✅ Allow public endpoints
-                        .requestMatchers("/api/user/update", "/api/user/me").authenticated() // ✅ Protected endpoints
-                        .anyRequest().authenticated() // ✅ All other endpoints require authentication
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow CORS preflight
+                        .requestMatchers("/addUser", "/loginUser", "/resetPassword", "/api/active-bench").permitAll() // Public endpoints
+                        .anyRequest().authenticated() // All other endpoints require authentication
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ Enforce stateless sessions (JWT-based authentication)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // ✅ Add JWT filter before authentication
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-        @Bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

@@ -19,7 +19,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
-    private static final List<String> PUBLIC_ENDPOINTS = List.of("/addUser", "/loginUser", "/resetPassword", "/api/active-bench");
+
+    // List of endpoints that do not require JWT authentication
+    private static final List<String> PUBLIC_ENDPOINTS = List.of(
+            "/addUser", "/loginUser", "/resetPassword", "/api/active-bench"
+    );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
